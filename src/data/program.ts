@@ -20,6 +20,8 @@ export interface Exercise {
   /** без веса (планка, мёртвый жук) */
   bodyweight?: boolean;
   rest: number;
+  /** сколько фото в public/ex/<id>-N.jpg (по умолчанию 2 положения) */
+  photos?: number;
   tips: string[];
   mistake: string;
 }
@@ -189,7 +191,7 @@ const C: Exercise[] = [
   },
   {
     id: 'farmer-hold', name: 'Удержание тяжёлых гантелей стоя', equipment: 'Тяжёлые гантели',
-    sets: 3, repsMin: 20, repsMax: 30, timed: true, rest: 90,
+    sets: 3, repsMin: 20, repsMax: 30, timed: true, rest: 90, photos: 1,
     tips: ['Стой ровно, плечи вниз', 'Сжимай рукоять изо всех сил', 'Пресс напряжён', 'Ставь гантели аккуратно'],
     mistake: 'Сутулиться и поднимать плечи к ушам.',
   },
@@ -221,6 +223,11 @@ export const POOL = {
     { id: 'cool', name: 'Совсем легко', meters: 100, reps: 1, rest: 0 },
   ] as PoolSegment[],
 };
+
+// Фото: free-exercise-db (github.com/yuhonas/free-exercise-db), public domain
+export function exercisePhotos(ex: Exercise): string[] {
+  return Array.from({ length: ex.photos ?? 2 }, (_, i) => `./ex/${ex.id}-${i}.jpg`);
+}
 
 export function allExercises(): Exercise[] {
   return [...A, ...B, ...C];

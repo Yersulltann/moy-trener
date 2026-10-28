@@ -166,3 +166,22 @@ export function useWakeLock(on: boolean) {
     return () => { dead = true; document.removeEventListener('visibilitychange', vis); lock?.release?.(); };
   }, [on]);
 }
+
+/** Фото упражнения: два положения сменяются сами — видно движение. Нажми — пауза. */
+export function ExercisePhoto({ srcs, alt, note }: { srcs: string[]; alt: string; note?: string }) {
+  const [frame, setFrame] = useState(0);
+  const [paused, setPaused] = useState(false);
+  useEffect(() => {
+    setFrame(0);
+    if (srcs.length < 2 || paused) return;
+    const t = setInterval(() => setFrame((f) => (f + 1) % srcs.length), 1300);
+    return () => clearInterval(t);
+  }, [srcs, paused]);
+  return (
+    <figure className="photo" onClick={() => { setPaused(!paused); if (!paused) setFrame((f) => (f + 1) % srcs.length); }}>
+      {srcs.map((src, i) => <img key={src} src={src} alt={i === 0 ? alt : ''} style={{ opacity: i === frame ? 1 : 0 }} draggable={false} />)}
+      {srcs.length > 1 && <span className="photo-tag">{frame + 1}/{srcs.length}{paused ? ' · пауза' : ''}</span>}
+      {note && <figcaption className="photo-note">{note}</figcaption>}
+    </figure>
+  );
+}

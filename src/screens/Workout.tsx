@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
-import { Exercise, POOL, RULES, STAGE, WARMUP, WORKOUT_LABEL, WorkoutId, WORKOUTS } from '../data/program';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Exercise, exercisePhotos, POOL, RULES, STAGE, WARMUP, WORKOUT_LABEL, WorkoutId, WORKOUTS } from '../data/program';
 import { lastSets, progressionHint, startWorkout, todaysWorkout, workoutExercises } from '../plan';
 import { ActiveWorkout, AppState, fmtDate, fmtKg, Pain, todayStr, uid, update, useStore } from '../store';
-import { beep, fmtSec, Stepper, useNow, useWakeLock } from '../components/ui';
+import { beep, ExercisePhoto, fmtSec, Stepper, useNow, useWakeLock } from '../components/ui';
 
 const TYPES: WorkoutId[] = ['A', 'B', 'C', 'pool'];
 
@@ -50,6 +50,7 @@ function Picker({ s }: { s: AppState }) {
             {WORKOUTS[sel].exercises.map((e, i) => (
               <div key={e.id} className="list-item">
                 <span className="muted num" style={{ width: 18 }}>{i + 1}</span>
+                <img className="thumb" src={exercisePhotos(e)[0]} alt="" loading="lazy" />
                 <span className="grow">{e.name}{e.ankle && <span style={{ color: 'var(--warn)' }}> *</span>}</span>
                 <span className="num muted small">{setsLabel(e)}</span>
               </div>
@@ -162,6 +163,7 @@ function ExerciseRun({ s, a }: { s: AppState; a: ActiveWorkout }) {
   const prev = lastSets(s, ex.id);
   const hint = progressionHint(s, ex);
   const isAssist = /гравитрон/i.test(ex.equipment);
+  const photos = useMemo(() => exercisePhotos(ex), [ex]);
 
   const defWeight = () => {
     if (done.length) return done[done.length - 1].weight;
@@ -215,6 +217,8 @@ function ExerciseRun({ s, a }: { s: AppState; a: ActiveWorkout }) {
           {isAssist && <span className="badge">больше помощь = легче</span>}
         </div>
       </div>
+
+      <ExercisePhoto srcs={photos} alt={ex.name} note={isAssist ? 'На фото без гравитрона. В гравитроне то же движение, колени на подушке.' : undefined} />
 
       {ex.ankle && (
         <div className="alert warn">
