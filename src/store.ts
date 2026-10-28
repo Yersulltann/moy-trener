@@ -62,7 +62,6 @@ export interface AppState {
   createdAt: string;
   profile: { heightCm: number; kcal: number; proteinMin: number; proteinMax: number; fat: number; carbs: number };
   theme: 'auto' | 'light' | 'dark';
-  showGroup1: boolean;
   events: ScheduleEvent[];
   customFoods: Food[];
   meals: Record<string, MealEntry[]>;
@@ -84,7 +83,6 @@ function initial(): AppState {
     createdAt: new Date().toISOString(),
     profile: { heightCm: PROFILE.heightCm, ...NUTRITION_TARGETS },
     theme: 'auto',
-    showGroup1: true,
     events: DEFAULT_EVENTS.map((e) => ({ ...e })),
     customFoods: [],
     meals: {},
@@ -97,10 +95,17 @@ function initial(): AppState {
   };
 }
 
+// пары гр. 1 оказались моими — снимаем старую пометку
+function migrate(s: AppState): AppState {
+  s.events = s.events.map(({ group1: _, ...e }: ScheduleEvent & { group1?: boolean }) => e);
+  delete (s as { showGroup1?: boolean }).showGroup1;
+  return s;
+}
+
 function load(): AppState {
   try {
     const raw = localStorage.getItem(KEY);
-    if (raw) return { ...initial(), ...JSON.parse(raw) };
+    if (raw) return migrate({ ...initial(), ...JSON.parse(raw) });
   } catch { /* приватный режим или битые данные */ }
   return initial();
 }
@@ -195,7 +200,7 @@ export function lastWeight(s: AppState) {
 
 export function eventsForDay(s: AppState, day: number) {
   return s.events
-    .filter((e) => e.day === day && (s.showGroup1 || !e.group1))
+    .filter((e) => e.day === day)
     .sort((a, b) => toMin(a.start) - toMin(b.start));
 }
 

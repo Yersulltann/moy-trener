@@ -56,7 +56,7 @@ export default function Today({ go }: { go: (t: Tab) => void }) {
               {plan.classes.map((c) => (
                 <div key={c.id} className="list-item small">
                   <span className="num muted" style={{ width: 92 }}>{c.start}–{c.end}</span>
-                  <span className="grow">{c.title}{c.online ? ' · онлайн' : ''}{c.group1 ? ' · гр. 1' : ''}</span>
+                  <span className="grow">{c.title}{c.online ? ' · онлайн' : ''}</span>
                 </div>
               ))}
             </div>

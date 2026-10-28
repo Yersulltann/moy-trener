@@ -12,8 +12,6 @@ export interface ScheduleEvent {
   kind: EventKind;
   /** для зала — какая тренировка */
   workout?: 'A' | 'B' | 'C';
-  /** пара группы 1 — может быть не моей */
-  group1?: boolean;
   online?: boolean;
 }
 
@@ -41,10 +39,10 @@ export const DEFAULT_EVENTS: ScheduleEvent[] = [
   ev(2, '16:50', '19:20', 'Drawing 3', 'class'),
   ev(3, '09:00', '11:40', 'Drawing 3', 'class'),
   ev(3, '12:30', '14:10', 'Typography', 'class'),
-  ev(3, '12:30', '14:10', 'Basic of photography', 'class', { group1: true }),
+  ev(3, '12:30', '14:10', 'Basic of photography', 'class'),
   ev(4, '10:10', '11:50', 'Alternative graphic', 'class'),
   ev(4, '12:30', '14:10', 'Alternative graphic', 'class'),
-  ev(4, '12:30', '14:10', 'Animation 1', 'class', { group1: true }),
+  ev(4, '12:30', '14:10', 'Animation 1', 'class'),
   ev(4, '14:40', '16:20', 'Animation 2', 'class'),
 
   // Тренировки

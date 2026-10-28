@@ -75,7 +75,7 @@ export default function Schedule() {
                 const ln = L.get(e.id);
                 const pos = ln && ln.of > 1 ? { left: `calc(${(ln.lane / ln.of) * 100}% + 1px)`, right: 'auto', width: `calc(${100 / ln.of}% - 2px)` } : {};
                 return (
-                  <button key={e.id} lang={e.kind === 'class' ? 'en' : 'ru'} className={`ev ${e.kind === 'meal' ? 'meal' : ''} ${e.group1 ? 'g1' : ''}`} style={{ top, height: h, background: e.kind === 'meal' ? undefined : COLOR[e.kind], ...pos }}
+                  <button key={e.id} lang={e.kind === 'class' ? 'en' : 'ru'} className={`ev ${e.kind === 'meal' ? 'meal' : ''}`} style={{ top, height: h, background: e.kind === 'meal' ? undefined : COLOR[e.kind], ...pos }}
                     onClick={() => setEdit(e)} aria-label={`${e.title} ${e.start}–${e.end}`}>
                     {e.title}
                   </button>
@@ -101,10 +101,6 @@ export default function Schedule() {
       </section>
 
       <section className="card stack">
-        <label className="row-between">
-          <span>Показывать пары группы 1<div className="small muted">Basic of photography (Чт), Animation 1 (Пт)</div></span>
-          <input type="checkbox" checked={s.showGroup1} onChange={(e) => update((st) => { st.showGroup1 = e.target.checked; })} style={{ width: 24, height: 24, accentColor: 'var(--accent)' }} />
-        </label>
         <button className="btn block ghost danger" onClick={() => confirm('Вернуть расписание по умолчанию? Твои изменения в расписании пропадут.') && update((st) => { st.events = DEFAULT_EVENTS.map((e) => ({ ...e })); })}>
           Сбросить расписание
         </button>
